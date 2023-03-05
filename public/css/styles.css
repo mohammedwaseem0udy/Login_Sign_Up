@@ -1,0 +1,36 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form {
+  max-width: 330px;
+  padding: 15px;
+}
+
+.form .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form input[type="email"] {
+  border-bottom-right-radius: 2;
+  border-bottom-left-radius: 2;
+}
+
+.form input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 2;
+  border-top-right-radius: 2;
+}
+
+.sign-up-anchor {
+    margin-top: 10px;
+}
