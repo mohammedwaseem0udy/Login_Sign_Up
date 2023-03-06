@@ -1,9 +1,10 @@
+const _ = require('lodash');
 const client = require("@mailchimp/mailchimp_marketing");
 client.setConfig({
-    apiKey: "2c203cd1de633425708e9e1c0f738241-us21",
-    server: "us21",
+    apiKey: "",
+    server: "",
 });
-const listId = "3bc90ecc13";
+const listId = "";
 
 let createUser = async function (user) {
     try {
@@ -58,8 +59,27 @@ let validateAndCreateUser = async function(user) {
     }
 }
 
+let validateLoginUser = async function(user) {
+    try {
+        const response = await client.lists.getListMember(
+            listId,
+            user.email
+        );
+        let password = _.get(response, 'merge_fields.PASSWORD' ,'');
+        if(password === user.password) {
+            return ["success", `Login Successful, welcome ${response.full_name}`];
+        } else {
+            return ["error", `Invalid Credentials`];
+        }
 
+    }
+    catch (err) {
+        return ["error", err.message];
+    }
+
+}
 
 module.exports = {
-    validateAndCreateUser: validateAndCreateUser
+    validateAndCreateUser: validateAndCreateUser,
+    validateLoginUser: validateLoginUser
 };

@@ -35,3 +35,17 @@ app.post("/create-user", async function (req, res) {
 app.listen(3000, function () {
     console.log("Server is Online");
 });
+
+app.post('/validate-login-user', async function(req, res) {
+    let body = _.get(req, "body", {});
+    let data = {
+        email: _.get(body, "email", ""),
+        password: _.get(body, "password", ""),
+    };
+    let response = await users.validateLoginUser(data);
+    if(response[1]) {
+        res.send(`<h1>${response[1]}</h1>`);
+    } else {
+        res.send(`<h1>Something went wrong</h1>`);
+    }
+})
