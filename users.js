@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 client.setConfig({
-    apiKey: "",
-    server: "",
+    apiKey: "f65527bdaa6f17d519c2fd5ae82d84cb-us21",
+    server: "us21",
 });
-const listId = "";
+const listId = "3bc90ecc13";
 
 let createUser = async function (user, hashedPassword) {
     try {
@@ -89,9 +89,10 @@ let validateLoginUser = async function(user) {
         let hash = _.get(response, 'merge_fields.PASSWORD' ,'');
         let isPasswordValidMatch = await validatePassword(user.password, hash);
         if(isPasswordValidMatch) {
-            return ["success", `Login Successful, welcome ${response.full_name}`];
+            return ["success", `${response.full_name}`];
         } else {
-            return ["error", `Invalid Credentials`];
+            let error = new Error("Invalid Credentials");
+            throw error;
         }
     }
     catch (err) {
