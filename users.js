@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 client.setConfig({
-    apiKey: "f65527bdaa6f17d519c2fd5ae82d84cb-us21",
-    server: "us21",
+    apiKey: "",
+    server: "",
 });
-const listId = "3bc90ecc13";
+const listId = "";
 
 let createUser = async function (user, hashedPassword) {
     try {
