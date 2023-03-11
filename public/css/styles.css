@@ -12,7 +12,7 @@ body {
 }
 
 .form {
-  max-width: 330px;
+  max-width: 380px;
   padding: 15px;
 }
 
@@ -33,4 +33,8 @@ body {
 
 .sign-up-anchor {
     margin-top: 10px;
+}
+
+.error-box {
+   visibility: hidden;
 }

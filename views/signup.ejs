@@ -77,9 +77,12 @@
 </head>
 
 <body class="text-center">
-
     <main class="form w-100 m-auto">
-        <form action="/create-user" method="post">
+        <div class="card bg-danger text-white mb-3 error-box">
+            <div class="card-body error-box-content">
+            </div>
+        </div>
+        <form>
             <img class="mb-4" src="/images/user-add-svgrepo-com.svg" alt="" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
 
@@ -102,6 +105,50 @@
             <button class="w-100 btn btn-lg btn-primary" type="submit">Create Account</button>
         </form>
     </main>
+
+    <script>
+        let errorBox = document.querySelector(".error-box");
+        let errorBoxContext = document.querySelector(".error-box-content");
+        let form = document.querySelector("form");
+        let errormsg = "";
+
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            errormsg = "";
+            errorBox.style.visibility = 'hidden';
+            let firstName = form.firstName.value;
+            let lastName = form.lastName.value;
+            let email = form.email.value;
+            let password = form.email.password;
+            let data = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password
+            }
+            try {
+                let response = await fetch("/create-user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+                let json = await response.json();
+                let userCreationStatus = json.userCreationStatus;
+                let serverResponse = json.serverResponse;
+                if(userCreationStatus === 'success') {
+                    
+                } else {
+                    errorBoxContext.textContent = serverResponse;
+                    errorBox.style.visibility = 'visible';
+                }
+            }
+            catch(err) {
+                
+            }
+        })
+    </script>
 </body>
 
 </html>
