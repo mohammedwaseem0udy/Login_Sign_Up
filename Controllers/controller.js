@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const notification = require('../Notifications/notification');
 const users = require('./users');
+const jwt = require('jsonwebtoken');
 
 module.exports.renderLoginForm = function (req, res) {
     res.render('login');
@@ -8,6 +9,16 @@ module.exports.renderLoginForm = function (req, res) {
 
 module.exports.renderSignUpForm = function (req, res) {
     res.render('signup');
+}
+
+const jwtMaxAge = 3 * 24 * 60 * 60; 
+
+module.exports.getJWT = function(id) {
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: jwtMaxAge});
+}
+
+module.exports.renderHomePage = function(req, res) {
+    res.render('success');
 }
 
 module.exports.createUser = async function (req, res) {
@@ -20,6 +31,8 @@ module.exports.createUser = async function (req, res) {
     };
     let serverResponse = await users.validateAndCreateUser(data);
     if(serverResponse.hasOwnProperty('contact_id')) {
+        const token = this.getJWT(serverResponse.contact_id);
+        res.cookie(jwt, token, {httpOnly: true, maxAge: jwtMaxAge * 1000});
         notification.sendNotification('User creation successful', `Welcome ${serverResponse}`);
         res.json({"userCreationStatus": "success", "serverResponse": serverResponse});
     } else {

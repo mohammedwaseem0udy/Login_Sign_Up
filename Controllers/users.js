@@ -1,13 +1,15 @@
 const _ = require('lodash');
 const client = require("@mailchimp/mailchimp_marketing");
 const bcrypt = require('bcrypt');
+let dotenv = require('dotenv');
+dotenv.config();
 const saltRounds = 10;
 
 client.setConfig({
-    apiKey: "",
-    server: "",
+    apiKey: process.env.MAILCHIMP_API_KEY,
+    server: process.env.MAILCHIMP_SERVER_ID,
 });
-const listId = "";
+const listId = process.env.MAILCHIMP_LIST_ID;
 
 let createUser = async function (user, hashedPassword) {
     try {
