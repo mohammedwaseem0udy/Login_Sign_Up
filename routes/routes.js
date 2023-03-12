@@ -14,4 +14,6 @@ router.post('/validate-login-user', controllers.loginUser);
 
 router.post('/logout', controllers.logoutUser);
 
+router.get('/signup-success', controllers.renderHomePage);
+
 module.exports = router

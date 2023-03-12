@@ -120,32 +120,27 @@
             let lastName = form.lastName.value;
             let email = form.email.value;
             let password = form.email.password;
-            let data = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: password
-            }
             try {
                 let response = await fetch("/create-user", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify({firstName, lastName, email, password}),
                 })
                 let json = await response.json();
                 let userCreationStatus = json.userCreationStatus;
                 let serverResponse = json.serverResponse;
                 if(userCreationStatus === 'success') {
-                    
+                    location.assign('/signup-success');
                 } else {
                     errorBoxContext.textContent = serverResponse;
                     errorBox.style.visibility = 'visible';
                 }
             }
             catch(err) {
-                
+                errorBoxContext.textContent = err;
+                errorBox.style.visibility = 'visible';
             }
         })
     </script>
