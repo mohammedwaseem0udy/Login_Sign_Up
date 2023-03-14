@@ -91,7 +91,7 @@ let validateLoginUser = async function(user) {
         let hash = _.get(response, 'merge_fields.PASSWORD' ,'');
         let isPasswordValidMatch = await validatePassword(user.password, hash);
         if(isPasswordValidMatch) {
-            return ["success", `${response.full_name}`];
+            return ["success", `${response.id}`];
         } else {
             let error = new Error("Invalid Credentials");
             throw error;
