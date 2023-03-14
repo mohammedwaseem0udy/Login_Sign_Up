@@ -132,7 +132,7 @@
                 let userCreationStatus = json.userCreationStatus;
                 let serverResponse = json.serverResponse;
                 if(userCreationStatus === 'success') {
-                    location.assign('/signup-success');
+                    location.assign('/login');
                 } else {
                     errorBoxContext.textContent = serverResponse;
                     errorBox.style.visibility = 'visible';

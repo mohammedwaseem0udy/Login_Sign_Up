@@ -79,16 +79,22 @@
 <body class="text-center">
 
   <main class="form w-100 m-auto">
+    <div class="card bg-danger text-white mb-3 error-box">
+      <div class="card-body error-box-content">
+      </div>
+    </div>
     <form action="/validate-login-user" method="post">
       <img class="mb-4" src="/images/login-svgrepo-com.svg" alt="" width="72" height="57">
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
       <div class="form-floating">
-        <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com" required="true">
+        <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+          required="true">
         <label for="floatingInput">Email address</label>
       </div>
       <div class="form-floating">
-        <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password" required="true">
+        <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password"
+          required="true">
         <label for="floatingPassword">Password</label>
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
@@ -97,8 +103,38 @@
           <a href="/signup">Not a memeber ? Sign up now..</a>
         </label>
       </div>
-      
+
     </form>
+    <script>
+        let errorBox = document.querySelector(".error-box");
+        let errorBoxContext = document.querySelector(".error-box-content");
+        let form = document.querySelector("form");
+        let errormsg = "";
+
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            errormsg = "";
+            errorBox.style.visibility = 'hidden';
+            let email = form.email.value;
+            let password = form.password.value;
+            try {
+              let response = await fetch("/validate-login-user", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({email, password})
+              })
+              let json = await response.json();
+              console.log(json);
+            }
+
+            catch(err) {
+
+            }
+
+        });
+    </script>
   </main>
 </body>
 

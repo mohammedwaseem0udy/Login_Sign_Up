@@ -13,8 +13,8 @@ module.exports.renderSignUpForm = function (req, res) {
 
 const jwtMaxAge = 3 * 24 * 60 * 60; 
 
-module.exports.getJWT = function(id) {
-    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: jwtMaxAge});
+let getJWT = function(id) {
+    return jwt.sign({id}, 'my secret key', {expiresIn: jwtMaxAge});
 }
 
 module.exports.renderHomePage = function(req, res) {
@@ -50,16 +50,17 @@ module.exports.loginUser = async function(req, res) {
     let response = await users.validateLoginUser(data);
     if(response[1]) {
         if(response[0] === 'success') {
-            notification.sendNotification('Login Successful', response[1]);
-            res.render('success', {name: response[1]});
+            notification.sendNotification('Login Successful', 'Welcome');
+            const jwt = getJWT(response[1]);
+            res.cookie('jwt', jwt, {httpOnly: true, maxAge: jwtMaxAge * 1000});
+            res.status(200).json({user: response});
         } else {
             notification.sendNotification('Login Failed', response[1]);
-            res.render('failure', {message: response[1]})
+            res.status(400).json({user: response});
         }
-        
     } else {
         notification.sendNotification('Login Failed', response[1]);
-        res.render('failure', {message: response[1]});
+        res.status(400).json({user: response});
     }
 }
 
