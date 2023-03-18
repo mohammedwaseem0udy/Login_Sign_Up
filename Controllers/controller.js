@@ -3,6 +3,11 @@ const notification = require('../Notifications/notification');
 const users = require('./users');
 const jwt = require('jsonwebtoken');
 
+module.exports.renderHome = function (req, res) {
+    const name = _.get(req, 'body.name', '');
+    res.render('success', {name: name});
+}
+
 module.exports.renderLoginForm = function (req, res) {
     res.render('login');
 }
@@ -13,12 +18,8 @@ module.exports.renderSignUpForm = function (req, res) {
 
 const jwtMaxAge = 3 * 24 * 60 * 60; 
 
-let getJWT = function(id) {
-    return jwt.sign({id}, 'my secret key', {expiresIn: jwtMaxAge});
-}
-
-module.exports.renderHomePage = function(req, res) {
-    res.render('success');
+let getJWT = function(id, name, loggedIn) {
+    return jwt.sign({id, name, loggedIn}, 'my secret key', {expiresIn: jwtMaxAge});
 }
 
 module.exports.createUser = async function (req, res) {
@@ -31,13 +32,11 @@ module.exports.createUser = async function (req, res) {
     };
     let serverResponse = await users.validateAndCreateUser(data);
     if(serverResponse.hasOwnProperty('contact_id')) {
-        const token = this.getJWT(serverResponse.contact_id);
-        res.cookie(jwt, token, {httpOnly: true, maxAge: jwtMaxAge * 1000});
-        notification.sendNotification('User creation successful', `Welcome ${serverResponse}`);
-        res.json({"userCreationStatus": "success", "serverResponse": serverResponse});
+        notification.sendNotification('User creation successful', `User created successfully`);
+        res.status(200).json({"userCreationStatus": "success", "serverResponse": serverResponse});
     } else {
         notification.sendNotification('User creation failed', `${serverResponse}`);
-        res.json({"userCreationStatus": "failed", "serverResponse":  `${serverResponse}`});
+        res.status(400).json({"userCreationStatus": "failed", "serverResponse":  `${serverResponse}`});
     }
 }
 
@@ -48,23 +47,27 @@ module.exports.loginUser = async function(req, res) {
         password: _.get(body, "password", ""),
     };
     let response = await users.validateLoginUser(data);
-    if(response[1]) {
+    let serverResponse = _.get(response, '1', {});
+    if(serverResponse) {
         if(response[0] === 'success') {
             notification.sendNotification('Login Successful', 'Welcome');
-            const jwt = getJWT(response[1]);
+            const jwt = getJWT(serverResponse.id, serverResponse.full_name, true);
             res.cookie('jwt', jwt, {httpOnly: true, maxAge: jwtMaxAge * 1000});
             res.status(200).json({user: response});
         } else {
-            notification.sendNotification('Login Failed', response[1]);
-            res.status(400).json({user: response});
+            const error =  _.get(response, '[1].message', '')
+            notification.sendNotification('Login Failed', error);
+            res.status(400).json({error});
         }
     } else {
-        notification.sendNotification('Login Failed', response[1]);
-        res.status(400).json({user: response});
+        const error =  _.get(response, '[1].message', '')
+        notification.sendNotification('Login Failed', error);
+        res.status(400).json({error});
     }
 }
 
 module.exports.logoutUser =  function(req, res) {
+    res.cookie('jwt', '', {maxAge: 1});
     res.redirect('login');
 }
 

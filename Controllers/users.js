@@ -91,14 +91,14 @@ let validateLoginUser = async function(user) {
         let hash = _.get(response, 'merge_fields.PASSWORD' ,'');
         let isPasswordValidMatch = await validatePassword(user.password, hash);
         if(isPasswordValidMatch) {
-            return ["success", `${response.id}`];
+            return ["success", response];
         } else {
             let error = new Error("Invalid Credentials");
             throw error;
         }
     }
     catch (err) {
-        return ["error", err.message];
+        return ["error", err];
     }
 
 }
