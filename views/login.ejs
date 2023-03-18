@@ -77,7 +77,9 @@
 </head>
 
 <body class="text-center">
-
+  <div class="loader">
+    <img class="loader-center" src="/images/loading.svg" width="72" height="57">
+  </div>
   <main class="form w-100 m-auto">
     <div class="card bg-danger text-white mb-3 error-box">
       <div class="card-body error-box-content">
@@ -108,10 +110,14 @@
         let errorBox = document.querySelector(".error-box");
         let errorBoxContext = document.querySelector(".error-box-content");
         let form = document.querySelector("form");
+        let button = document.querySelector("button");
+        let loader = document.querySelector(".loader");
         let errormsg = "";
 
         form.addEventListener("submit", async function(e) {
             e.preventDefault();
+            button.style.opacity = 0.6;
+            loader.style.zIndex = 100;
             errormsg = "";
             errorBox.style.visibility = 'hidden';
             let email = form.email.value;
@@ -129,7 +135,11 @@
                   let error = json.error;
                   errorBoxContext.textContent = error;
                   errorBox.style.visibility = 'visible';
+                  button.style.opacity = 1;
+                  loader.style.zIndex = -1;
               } else if(json.hasOwnProperty('user')) {
+                  button.style.opacity = 1;
+                  loader.style.zIndex = -1;
                   location.assign('/');
               } else {
                 let error = new Error('Something went wrong. Contact support.');
@@ -140,6 +150,8 @@
             catch(err) {
               errorBoxContext.textContent = err.message;
               errorBox.style.visibility = 'visible';
+              button.style.opacity = 1;
+              loader.style.zIndex = -1;
             }
 
         });
