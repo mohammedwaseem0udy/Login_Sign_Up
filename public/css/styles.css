@@ -9,6 +9,7 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   background-color: #f5f5f5;
+  position: relative;
 }
 
 .form {
@@ -37,4 +38,28 @@ body {
 
 .error-box {
    visibility: hidden;
+}
+
+.loader {
+  margin: auto;
+  position: absolute;
+  z-index: -1;
+  height: 98vh;
+  width: 98vw;
+}
+
+.loader-center {
+  position: absolute;
+  top: 50vh;
+  right: 45vw;
+  animation: rotation 1s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
