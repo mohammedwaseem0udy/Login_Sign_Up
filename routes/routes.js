@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router()
 const controllers = require('../Controllers/controller');
+const authorization = require('../Controllers/authMiddleware');
 
-router.get("/", controllers.renderLoginForm);
+router.get("/", authorization.isLoggedIn, controllers.renderHome);
 
-router.get("/signup", controllers.renderSignUpForm);
+router.get("/signup", authorization.checkAlreadyLoggedIn, controllers.renderSignUpForm);
 
-router.get('/login', controllers.renderLoginForm);
+router.get('/login', authorization.checkAlreadyLoggedIn, controllers.renderLoginForm);
 
 router.post("/create-user", controllers.createUser);
 
@@ -14,6 +15,5 @@ router.post('/validate-login-user', controllers.loginUser);
 
 router.post('/logout', controllers.logoutUser);
 
-router.get('/signup-success', controllers.renderHomePage);
 
 module.exports = router

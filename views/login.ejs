@@ -103,7 +103,6 @@
           <a href="/signup">Not a memeber ? Sign up now..</a>
         </label>
       </div>
-
     </form>
     <script>
         let errorBox = document.querySelector(".error-box");
@@ -126,11 +125,21 @@
                   body: JSON.stringify({email, password})
               })
               let json = await response.json();
-              console.log(json);
+              if(json.hasOwnProperty('error')) {
+                  let error = json.error;
+                  errorBoxContext.textContent = error;
+                  errorBox.style.visibility = 'visible';
+              } else if(json.hasOwnProperty('user')) {
+                  location.assign('/');
+              } else {
+                let error = new Error('Something went wrong. Contact support.');
+                throw error;
+              }
             }
 
             catch(err) {
-
+              errorBoxContext.textContent = err.message;
+              errorBox.style.visibility = 'visible';
             }
 
         });
