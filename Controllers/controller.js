@@ -19,7 +19,7 @@ module.exports.renderSignUpForm = function (req, res) {
 const jwtMaxAge = 3 * 24 * 60 * 60; 
 
 let getJWT = function(id, name, loggedIn) {
-    return jwt.sign({id, name, loggedIn}, 'my secret key', {expiresIn: jwtMaxAge});
+    return jwt.sign({id, name, loggedIn},process.env.JWT_SECRET , {expiresIn: jwtMaxAge});
 }
 
 module.exports.createUser = async function (req, res) {

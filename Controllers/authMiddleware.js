@@ -4,7 +4,7 @@ const _ = require('lodash');
 let isLoggedIn = function(req, res, next) {
     let token = _.get(req, 'cookies.jwt', '');
     if(token) {
-        jwt.verify(token, 'my secret key', function(err, decoded) {
+        jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
             if(err) {
                 console.log(err);
                 res.redirect('/login');
@@ -27,7 +27,7 @@ let isLoggedIn = function(req, res, next) {
 let checkAlreadyLoggedIn = function(req, res, next) {
     let token = _.get(req, 'cookies.jwt', '');
     if(token) {
-        jwt.verify(token, 'my secret key', function(err, decoded) {
+        jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
             if(err) {
                 console.log(err);
                 next();
@@ -49,5 +49,4 @@ let checkAlreadyLoggedIn = function(req, res, next) {
 module.exports = {
     isLoggedIn: isLoggedIn,
     checkAlreadyLoggedIn: checkAlreadyLoggedIn
-    
 }

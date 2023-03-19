@@ -15,21 +15,21 @@ app.use(cookieParser());
 // paths
 app.use(routes);
 
-app.listen(3000, function() {
-    console.log('Server is online.');
-})
-// let main = async function() {
-//     try {
-//         await secret.loadSecret();
-//         console.log('SUCCESSFULLY FETCHED VAULT SECRET');
-//         // app.listen(3000, function() {
-//         //     console.log('Server is online.');
-//         // })
-//     }
-//     catch(err) {
-//         console.log(err);
-//         process.exit();
-//     }
-// }
+// app.listen(3000, function() {
+//     console.log('Server is online.');
+// })
+let main = async function() {
+    try {
+        await secret.loadSecret();
+        console.log('SUCCESSFULLY FETCHED VAULT SECRET');
+        app.listen(3000, function() {
+            console.log('Server is online.');
+        })
+    }
+    catch(err) {
+        console.log(err);
+        process.exit();
+    }
+}
 
-// main()
+main();
